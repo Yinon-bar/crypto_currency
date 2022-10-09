@@ -1,0 +1,14 @@
+body {
+  background: linear-gradient(rgb(39, 43, 48), rgba(39, 43, 48, 0.5)),
+    url(img/bitcoin\ back\ rotate.png);
+  /* background-size: 110px; */
+  background-position: left;
+  background-size: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.coin-desc {
+  display: none;
+}
