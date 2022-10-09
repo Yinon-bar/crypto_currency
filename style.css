@@ -12,3 +12,7 @@ body {
 .coin-desc {
   display: none;
 }
+
+input {
+  cursor: pointer;
+}

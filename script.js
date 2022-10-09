@@ -21,7 +21,7 @@ $(document).ready(function () {
     kryptoArr.forEach((obj) => {
       $("#coinSec").append(`
       <div
-            class="card text-white bg-dark mb-3 p-0"
+            class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
             style="max-width: 20rem; min-height: 20rem;" >
             <div class="card-header">${obj.symbol}</div>
             <div class="card-body row d-flex  align-items-space-between">
@@ -57,9 +57,10 @@ $(document).ready(function () {
       $("button").each(function (index) {
         let flag = 1;
         $(this).on("click", function () {
-          // console.log(this.dataset.objid);
+          console.log(this.dataset.objid);
           let btn = this;
-          $(this).parent().prev().children(".prog").slideDown(200);
+          console.log($(`#${this.dataset.objid}`));
+          $(`#${this.dataset.objid} .prog`).slideDown(200);
           $.ajax({
             url: "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
             success: function (data) {
