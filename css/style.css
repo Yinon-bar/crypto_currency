@@ -16,3 +16,7 @@ body {
 input {
   cursor: pointer;
 }
+
+hr {
+  border: 2px solid rgb(170, 170, 170);
+}

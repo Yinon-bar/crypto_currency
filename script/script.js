@@ -1,4 +1,18 @@
-$(document).ready(function () {
+import Header from "./Header.js";
+import Nav from "./Nav.js";
+import About from "./About.js";
+import Reports from "./Reports.js";
+
+// רנדור "קומפוננטות" ההדר והנאב בר
+function renderToHtml() {
+  $(".container").prepend(Header());
+  $(".container > main").prepend(Nav());
+}
+
+renderToHtml();
+
+// ביצוע קריאת API לכל המטבעות
+$(document).ready(function getAllApi() {
   $.ajax({
     url: "https://api.coingecko.com/api/v3/coins/list",
     success: function (data) {
@@ -9,20 +23,21 @@ $(document).ready(function () {
     },
   });
 
+  // במידה והכל תקין הפעלת פונקציית דיספליי
   function display(arr) {
     let kryptoArr = [];
     arr.forEach((obj) => {
       kryptoArr.push(obj);
     });
-    // console.log(kryptoArr);
+    // יש לחתוך את המערך ל200 מטבעות בלבד
     kryptoArr.splice(200);
-    // console.log(kryptoArr);
-
+    // עבור כל מטבע שחזר במערך יש לרנדר לדיו המתאים
+    $("#coinSec").html("");
     kryptoArr.forEach((obj) => {
       $("#coinSec").append(`
       <div
             class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
-            style="max-width: 20rem; min-height: 20rem;" >
+            style="max-width: 21rem; min-height: 20rem;" >
             <div class="card-header">${obj.symbol}</div>
             <div class="card-body row d-flex  align-items-space-between">
               <div class="sec col-9">
@@ -57,28 +72,27 @@ $(document).ready(function () {
       $("button").each(function (index) {
         let flag = 1;
         $(this).on("click", function () {
-          console.log(this.dataset.objid);
+          // console.log(this.dataset.objid);
           let btn = this;
-          console.log($(`#${this.dataset.objid}`));
-          $(`#${this.dataset.objid} .prog`).slideDown(200);
+          let cardId = this.dataset.objid;
+          // console.log(cardId);
+          $(`#${cardId} .prog`).slideDown(200);
           $.ajax({
             url: "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
             success: function (data) {
-              coinDisc(data, btn);
+              coinDisc(data, cardId);
             },
             error: function (err) {
               console.log(err);
             },
           });
-          function coinDisc(data, btn) {
-            // console.log(btn);
-            console.log(data);
+          // תוספת פרטים נפתחת
+          function coinDisc(data, cardId) {
+            console.log(cardId);
+            // console.log(data);
             console.log(flag);
             if (flag == 1) {
-              $(btn)
-                .parent()
-                .prev()
-                .children("")
+              $(`#${cardId} .prog`)
                 .html(
                   `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
                   <div class="col"><img width="100%" src="${data.image.small}"></div>` +
@@ -106,42 +120,26 @@ $(document).ready(function () {
     }
   }
 
+  changeToReports();
+
   function changeToReports() {
-    $(".btn-group > .btn-check").each(function (index) {
+    $(".btn-check").each(function (index) {
       // console.log(index);
       // console.log(this);
       $(this).on("change", function () {
         console.log(this.id);
         switch (this.id) {
           case "home":
-            $("#coinSec").html(home());
+            $("#coinSec").html(getAllApi());
             break;
           case "reports":
-            $("#coinSec").html(reports());
+            $("#coinSec").html(Reports());
             break;
           case "about":
-            $("#coinSec").html(about());
+            $("#coinSec").html(About());
             break;
         }
       });
     });
-  }
-
-  changeToReports();
-
-  function home() {
-    return `
-      <h1>Home</h1>
-    `;
-  }
-  function reports() {
-    return `
-      <h1>Reports</h1>
-    `;
-  }
-  function about() {
-    return `
-      <h1>About</h1>
-    `;
   }
 });
