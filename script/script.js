@@ -37,7 +37,7 @@ $(document).ready(function getAllApi() {
       $("#coinSec").append(`
       <div
             class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
-            style="max-width: 21rem; min-height: 20rem;" >
+            style="max-width: 20rem; min-height: 20rem;" >
             <div class="card-header">${obj.symbol}</div>
             <div class="card-body row d-flex  align-items-space-between">
               <div class="sec col-9">
