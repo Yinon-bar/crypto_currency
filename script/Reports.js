@@ -2,15 +2,15 @@ function Reports() {
   let unixTime1 = 1664582400;
   let unixTime2 = 1664668800;
   let date = new Date(unixTime1 * 1000);
-  console.log(date);
+  // console.log(date);
   let dd = date.getDate();
   let mm = date.getMonth();
   let yy = date.getFullYear();
-  console.log(dd);
-  console.log(mm);
-  console.log(yy);
+  // console.log(dd);
+  // console.log(mm);
+  // console.log(yy);
   let date2 = date.toLocaleDateString("en-IL");
-  console.log(date2);
+  // console.log(date2);
 
   $("#coinSec").html(
     `<div id=chartContainer style="height: 450px; width: 100%" ></div>`

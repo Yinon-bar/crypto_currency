@@ -39,7 +39,7 @@ $(document).ready(function getAllApi() {
             class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
             style="max-width: 20rem; min-height: 20rem;" >
             <div class="card-header">${obj.symbol}</div>
-            <div class="card-body row d-flex  align-items-space-between">
+            <div class="card-body row d-flex align-items-space-between">
               <div class="sec col-9">
                 <h4 class="card-title">${obj.name}</h4>
                 <h6 class="text-secondary card-title">ID: ${obj.id}</h6>
@@ -48,6 +48,7 @@ $(document).ready(function getAllApi() {
                 class="form-check d-flex justify-content-end col-3 form-switch"
               >
                 <input
+                  data-objid='${obj.id}'
                   class="form-check-input"
                   type="checkbox"
                   id="flexSwitchCheckDefault"
@@ -66,6 +67,33 @@ $(document).ready(function getAllApi() {
           </div>
       `);
     });
+
+    addToArrRepoerts();
+    // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
+    function addToArrRepoerts() {
+      let SelectedCoinsArr = [];
+      // console.log(cardId);
+      $("#coinSec input[type=checkbox]").each(function () {
+        $(this).on("change", function () {
+          let cardId = this.dataset.objid;
+          // ולידציה להוספת מטבעות
+          if (this.checked) {
+            if (SelectedCoinsArr.length < 5) {
+              SelectedCoinsArr.push(cardId);
+            } else {
+              alert("The maximum coins to compare is 5");
+              this.checked = false;
+            }
+          } else {
+            let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
+            console.log(delItem);
+            SelectedCoinsArr.splice(delItem, 1);
+            console.log(SelectedCoinsArr);
+          }
+          console.log(SelectedCoinsArr);
+        });
+      });
+    }
     getInfo(kryptoArr);
     function getInfo(arr) {
       console.log(arr);
