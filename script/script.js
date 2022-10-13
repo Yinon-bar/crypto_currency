@@ -70,8 +70,8 @@ $(document).ready(function getAllApi() {
 
     addToArrRepoerts();
     // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
+    let SelectedCoinsArr = [];
     function addToArrRepoerts() {
-      let SelectedCoinsArr = [];
       // console.log(cardId);
       $("#coinSec input[type=checkbox]").each(function () {
         $(this).on("change", function () {

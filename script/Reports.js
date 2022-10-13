@@ -1,3 +1,18 @@
+// יצירת אי פי אי להשגת המידע על המטבעות
+// compareCoin();
+
+// function compareCoin(SelectedCoinsArr) {
+//   $.ajax({
+//     url: "https://www.cryptocompare.com/api/#-api-data-price",
+//     success: function (data) {
+//       display(data);
+//     },
+//     error: function (err) {
+//       console.log(err);
+//     },
+//   });
+// }
+
 function Reports() {
   let unixTime1 = 1664582400;
   let unixTime2 = 1664668800;
@@ -85,6 +100,9 @@ function Reports() {
     ],
   });
   chart.render();
+  // setInterval(() => {
+  //   console.log("inon");
+  // }, 500);
 
   function toogleDataSeries(e) {
     if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
