@@ -23,6 +23,8 @@ $(document).ready(function getAllApi() {
     },
   });
 
+  let SelectedCoinsArr = [];
+
   // במידה והכל תקין הפעלת פונקציית דיספליי
   function display(arr) {
     let kryptoArr = [];
@@ -70,7 +72,7 @@ $(document).ready(function getAllApi() {
 
     addToArrRepoerts();
     // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
-    let SelectedCoinsArr = [];
+
     function addToArrRepoerts() {
       // console.log(cardId);
       $("#coinSec input[type=checkbox]").each(function () {
@@ -96,7 +98,7 @@ $(document).ready(function getAllApi() {
     }
     getInfo(kryptoArr);
     function getInfo(arr) {
-      console.log(arr);
+      // console.log(arr);
       $("button").each(function (index) {
         let flag = 1;
         $(this).on("click", function () {
@@ -155,13 +157,13 @@ $(document).ready(function getAllApi() {
       // console.log(index);
       // console.log(this);
       $(this).on("change", function () {
-        console.log(this.id);
+        // console.log(this.id);
         switch (this.id) {
           case "home":
             $("#coinSec").html(getAllApi());
             break;
           case "reports":
-            $("#coinSec").html(Reports());
+            $("#coinSec").html(Reports(SelectedCoinsArr));
             break;
           case "about":
             $("#coinSec").html(About());
