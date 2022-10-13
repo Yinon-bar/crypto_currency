@@ -31,80 +31,99 @@ function Reports() {
     `<div id=chartContainer style="height: 450px; width: 100%" ></div>`
   );
 
-  // -------------------------------------------------------
+  let dataPoints = [];
+
   let chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: true,
     theme: "dark2",
     title: {
       text: "Coin Compare",
     },
+    legend: {
+      cursor: "pointer",
+      verticalAlign: "top",
+      fontSize: 22,
+      // fontColor: "dimGrey",
+      itemclick: toggleDataSeries,
+    },
+    axisY: {
+      prefix: "$",
+    },
+    toolTip: {
+      shared: true,
+    },
     axisX: {
-      valueFormatString: "DD/MMM",
+      // valueFormatString: `${(+dd, +mm)}`,
+      title: "chart updates every 2 secs",
       crosshair: {
         enabled: true,
         snapToDataPoint: true,
       },
     },
-    axisY: {
-      title: "Coin Value ($)",
-      includeZero: true,
-      crosshair: {
-        enabled: true,
-      },
-    },
-    toolTip: {
-      shared: true,
-    },
-    legend: {
-      cursor: "pointer",
-      verticalAlign: "bottom",
-      horizontalAlign: "left",
-      dockInsidePlotArea: true,
-      itemclick: toogleDataSeries,
-    },
     data: [
       {
-        type: "line",
-        showInLegend: true,
         name: "BTC",
-        markerType: "circle",
-        xValueFormatString: "DD MMM, YYYY",
-        color: "#F08080",
-        dataPoints: [
-          { x: new Date(yy, mm, dd), y: 853 },
-          { x: new Date(yy, mm, 3), y: 650 },
-          { x: new Date(yy, mm, 4), y: 700 },
-          { x: new Date(yy, mm, 5), y: 710 },
-          { x: new Date(yy, mm, 6), y: 658 },
-          { x: new Date(yy, mm, 7), y: 734 },
-          { x: new Date(yy, mm, 8), y: 963 },
-          { x: new Date(yy, mm, 9), y: 847 },
-        ],
+        type: "line",
+        lineThickness: 3,
+        yValueFormatString: "$####.00",
+        xValueType: "dateTime",
+        showInLegend: true,
+        xValueFormatString: "hh:mm:ss TT",
+        dataPoints: dataPoints,
       },
       {
-        type: "line",
-        showInLegend: true,
         name: "ETH",
-        // lineDashType: "dash",
+        type: "line",
+        lineThickness: 3,
+        yValueFormatString: "$####.00",
         dataPoints: [
-          { x: new Date(yy, mm, dd), y: 663 },
-          { x: new Date(yy, mm, 3), y: 510 },
-          { x: new Date(yy, mm, 4), y: 560 },
-          { x: new Date(yy, mm, 5), y: 540 },
-          { x: new Date(yy, mm, 6), y: 558 },
-          { x: new Date(yy, mm, 7), y: 544 },
-          { x: new Date(yy, mm, 8), y: 693 },
-          { x: new Date(yy, mm, 9), y: 657 },
+          { x: 1, y: 15 },
+          { x: 7, y: 18 },
+          { x: 36, y: 27 },
         ],
+        color: "red",
+        showInLegend: true,
+      },
+      {
+        name: "BUL",
+        type: "line",
+        lineThickness: 3,
+        dataPoints: [
+          { x: 5, y: 15 },
+          { x: 17, y: 10 },
+          { x: 52, y: 5 },
+        ],
+        color: "green",
+        showInLegend: true,
       },
     ],
   });
-  chart.render();
-  // setInterval(() => {
-  //   console.log("inon");
-  // }, 500);
+  updateData();
 
-  function toogleDataSeries(e) {
+  // Initial Values
+  var xValue = 0;
+  var yValue = 20;
+  var newDataCount = 3;
+
+  function addData(data) {
+    if (newDataCount != 1) {
+      $.each(data, function (key, value) {
+        dataPoints.push({ x: value[0], y: parseInt(value[1]) });
+        xValue++;
+        yValue = parseInt(value[1]);
+      });
+    } else {
+      //dataPoints.shift();
+      dataPoints.push({ x: data[0][0], y: parseInt(data[0][1]) });
+      xValue++;
+      yValue = parseInt(data[0][1]);
+    }
+
+    newDataCount = 1;
+    chart.render();
+    setTimeout(updateData, 1000);
+  }
+
+  function toggleDataSeries(e) {
     if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
       e.dataSeries.visible = false;
     } else {
@@ -112,10 +131,19 @@ function Reports() {
     }
     chart.render();
   }
-  // return `
-  // <h1>Reportes</h1>
 
-  // `;
+  function updateData() {
+    $.getJSON(
+      "https://canvasjs.com/services/data/datapoints.php?xstart=" +
+        xValue +
+        "&ystart=" +
+        yValue +
+        "&length=" +
+        newDataCount +
+        "type=json",
+      addData
+    );
+  }
 }
 
 export default Reports;
