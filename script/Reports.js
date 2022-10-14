@@ -6,7 +6,7 @@ function Reports(SelectedCoinsArr) {
 
   function compareCoin(SelectedCoinsArr) {
     $.ajax({
-      url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,EUR",
+      url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=algohalf,ETH&tsyms=USD,EUR",
       success: function (data) {
         createTimeCoin(data);
       },
@@ -18,7 +18,7 @@ function Reports(SelectedCoinsArr) {
 
   let coins = [];
   function createTimeCoin(data) {
-    // console.log(data);
+    console.log(data);
     for (let coin in data) {
       let coinObj = {};
       coinObj.cName = coin;
@@ -27,7 +27,7 @@ function Reports(SelectedCoinsArr) {
     }
     // console.log(coins[0].cName);
     let date = new Date();
-    console.log(date);
+    // console.log(date);
     let dd = date.getDate();
     let mm = date.getMonth();
     let yy = date.getFullYear();

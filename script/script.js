@@ -33,9 +33,11 @@ $(document).ready(function getAllApi() {
     });
     // יש לחתוך את המערך ל200 מטבעות בלבד
     kryptoArr.splice(200);
+    console.log(kryptoArr);
     // עבור כל מטבע שחזר במערך יש לרנדר לדיו המתאים
     $("#coinSec").html("");
     kryptoArr.forEach((obj) => {
+      // console.log(obj);
       $("#coinSec").append(`
       <div
             class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
@@ -50,7 +52,7 @@ $(document).ready(function getAllApi() {
                 class="form-check d-flex justify-content-end col-3 form-switch"
               >
                 <input
-                  data-objid='${obj.id}'
+                  data-objid='${obj.symbol}'
                   class="form-check-input"
                   type="checkbox"
                   id="flexSwitchCheckDefault"
