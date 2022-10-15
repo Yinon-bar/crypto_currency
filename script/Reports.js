@@ -1,55 +1,10 @@
 // יצירת אי פי אי להשגת המידע על המטבעות
 
 function Reports(SelectedCoinsArr) {
-  const coins = [];
-  const updateInterval = 3000;
-
-  // 1. create chart and consts
-  // 2. fetch data in an interval
-
-  compareCoin(SelectedCoinsArr);
-
-  function compareCoin(SelectedCoinsArr) {
-    $.ajax({
-      url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SelectedCoinsArr}&tsyms=USD,EUR`,
-      success: function (priceMultidata) {
-        // generates first set of dataPoints
-        createTimeCoin(priceMultidata);
-        updateChart();
-        setInterval(function () {
-          updateChart();
-        }, updateInterval);
-      },
-      error: function (err) {
-        console.log(err);
-      },
-    });
-  }
-
-  function createTimeCoin(priceMultidata) {
-    const time = new Date();
-
-    for (let coin in priceMultidata) {
-      const dataPoint = { x: time.getTime(), y: coin.cValue };
-      let coinObj = {};
-      (coinObj._defaultsKey = "DataSeries"),
-        (coinObj.type = "line"),
-        (coinObj.mame = coin),
-        (coinObj.showInLegend = true),
-        (coinObj.xValueType = "dateTime"),
-        (coinObj.yValueFormatString = "$####.00"),
-        (coinObj.cValue = priceMultidata[coin].USD),
-        (coinObj.dataPoints = [dataPoint]),
-        (coinObj.lineThickness = 3),
-        (coinObj.legendText = coin),
-        coins.push(coinObj);
-    }
-  }
-
+  //@@@@@ CREATING THE CHART @@@@@//
   $("#coinSec").html(
     `<div id=chartContainer style="height: 450px; width: 100%" ></div>`
   );
-
   const chart = new CanvasJS.Chart("chartContainer", {
     theme: "dark2",
     zoomEnabled: true,
@@ -72,11 +27,8 @@ function Reports(SelectedCoinsArr) {
       fontColor: "dimGrey",
       itemclick: toggleDataSeries,
     },
-    data: [],
+    data: initiateCoins(),
   });
-
-  // הערכים שאני הכנסתי
-  chart.options.data = coins;
 
   // כבוי והדלקה של התצוגת מטבעות על הגרף
   function toggleDataSeries(e) {
@@ -88,33 +40,53 @@ function Reports(SelectedCoinsArr) {
     chart.render();
   }
 
-  // initial value
-  let yValue1 = 300;
+  function initiateCoins() {
+    return SelectedCoinsArr.map((coinKey) => {
+      const coinObj = {};
+      (coinObj._defaultsKey = "DataSeries"),
+        (coinObj.name = coinKey.toUpperCase()),
+        (coinObj.dataPoints = []),
+        (coinObj.legendText = coinKey),
+        (coinObj.type = "line"),
+        (coinObj.showInLegend = true),
+        (coinObj.xValueType = "dateTime"),
+        (coinObj.yValueFormatString = "$####.00"),
+        (coinObj.lineThickness = 3);
+      return coinObj;
+    });
+  }
 
-  function updateChart(count) {
+  //@@@@@ FETCHING DATA DYNAMICALLY @@@@@//
+  const fetchInterval = 3000;
+
+  fetchData(SelectedCoinsArr);
+  setInterval(function () {
+    fetchData(SelectedCoinsArr);
+  }, fetchInterval);
+
+  function fetchData(SelectedCoinsArr) {
+    $.ajax({
+      url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SelectedCoinsArr}&tsyms=USD,EUR`,
+      success: function (priceMultiData) {
+        updateChart(priceMultiData);
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  }
+
+  function updateChart(priceMultiData) {
     const updatedTime = new Date();
-
-    count = count || 1;
-    let deltaY1, deltaY2;
-    for (let i = 0; i < count; i++) {
-      updatedTime.setTime(updatedTime.getTime() + updateInterval);
-      deltaY1 = 0.5 + Math.random() * (-0.5 - 0.5);
-
-      // adding random value and rounding it to two digits.
-      yValue1 = Math.round((yValue1 + deltaY1) * 100) / 100;
-
-      // pushing the new values
-      console.log("coins_0", chart.options.data);
-      console.log("coins", coins);
-
-      for (i = 0; i < coins.length; i++) {
-        chart.options.data[i].dataPoints.push({
-          x: updatedTime.getTime(),
-          y: coins[i].cValue,
-        });
-      }
+    updatedTime.setTime(updatedTime.getTime() + fetchInterval);
+    // pushing the new data points
+    for (let i = 0; i < SelectedCoinsArr.length; i++) {
+      console.log("chart.options.data[i].name: ", chart.options.data[i].name);
+      chart.options.data[i].dataPoints.push({
+        x: updatedTime.getTime(),
+        y: priceMultiData[chart.options.data[i].name].USD,
+      });
     }
-
     chart.render();
   }
 }
