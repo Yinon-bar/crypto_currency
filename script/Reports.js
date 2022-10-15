@@ -81,7 +81,6 @@ function Reports(SelectedCoinsArr) {
     updatedTime.setTime(updatedTime.getTime() + fetchInterval);
     // pushing the new data points
     for (let i = 0; i < SelectedCoinsArr.length; i++) {
-      console.log("chart.options.data[i].name: ", chart.options.data[i].name);
       chart.options.data[i].dataPoints.push({
         x: updatedTime.getTime(),
         y: priceMultiData[chart.options.data[i].name].USD,
