@@ -6,7 +6,7 @@ function Reports(SelectedCoinsArr) {
 
   function compareCoin(SelectedCoinsArr) {
     $.ajax({
-      url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=algohalf,ETH&tsyms=USD,EUR",
+      url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SelectedCoinsArr}&tsyms=USD,EUR`,
       success: function (data) {
         createTimeCoin(data);
       },
@@ -17,14 +17,25 @@ function Reports(SelectedCoinsArr) {
   }
 
   let coins = [];
+  let cName = "inon";
   function createTimeCoin(data) {
     console.log(data);
     for (let coin in data) {
       let coinObj = {};
-      coinObj.cName = coin;
-      coinObj.cValue = data[coin].USD;
-      coins.push(coinObj);
+      console.log(coin);
+      (coinObj._defaultsKey = "DataSeries"),
+        (coinObj.type = "line"),
+        (coinObj.mame = coin),
+        (coinObj.showInLegend = true),
+        (coinObj.xValueType = "dateTime"),
+        (coinObj.yValueFormatString = "$####.00"),
+        (coinObj.cValue = data[coin].USD),
+        (coinObj.dataPoints = dataPoints1),
+        (coinObj.lineThickness = 3),
+        (coinObj.legendText = coin),
+        coins.push(coinObj);
     }
+    console.log("coins:", coins);
     // console.log(coins[0].cName);
     let date = new Date();
     // console.log(date);
@@ -43,18 +54,17 @@ function Reports(SelectedCoinsArr) {
   );
 
   let dataPoints1 = [];
-  let dataPoints2 = [];
 
-  let x = {
-    _defaultsKey: "DataSeries",
-    type: "line",
-    xValueType: "dateTime",
-    yValueFormatString: "$####.00",
-    showInLegend: true,
-    name: "Inon",
-    dataPoints: dataPoints2,
-    lineThickness: 3,
-  };
+  // let x = {
+  //   _defaultsKey: "DataSeries",
+  //   type: "line",
+  //   xValueType: "dateTime",
+  //   yValueFormatString: "$####.00",
+  //   showInLegend: true,
+  //   name: "Inon",
+  //   dataPoints: dataPoints2,
+  //   lineThickness: 3,
+  // };
 
   let chart = new CanvasJS.Chart("chartContainer", {
     theme: "dark2",
@@ -88,17 +98,14 @@ function Reports(SelectedCoinsArr) {
       //   name: cName,
       //   dataPoints: dataPoints1,
       // },
-      // {
-      //   type: "line",
-      //   xValueType: "dateTime",
-      //   yValueFormatString: "$####.00",
-      //   showInLegend: true,
-      //   name: "Company B",
-      //   dataPoints: dataPoints2,
-      // },
     ],
   });
 
+  // הערכים שאני הכנסתי
+  chart.options.data = coins;
+  console.log(chart.options);
+
+  // כבוי והדלקה של התצוגת מטבעות על הגרף
   function toggleDataSeries(e) {
     if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
       e.dataSeries.visible = false;
@@ -108,12 +115,12 @@ function Reports(SelectedCoinsArr) {
     chart.render();
   }
 
-  var updateInterval = 3000;
+  let updateInterval = 3000;
   // initial value
-  var yValue1 = 600;
-  var yValue2 = 605;
+  let yValue1 = 300;
+  console.log(coins);
 
-  var time = new Date();
+  let time = new Date();
   // starting at 9.30 am
   // time.setHours(9);
   // time.setMinutes(30);
@@ -122,29 +129,27 @@ function Reports(SelectedCoinsArr) {
 
   function updateChart(count) {
     count = count || 1;
-    var deltaY1, deltaY2;
-    for (var i = 0; i < count; i++) {
+    let deltaY1, deltaY2;
+    for (let i = 0; i < count; i++) {
       time.setTime(time.getTime() + updateInterval);
       deltaY1 = 0.5 + Math.random() * (-0.5 - 0.5);
-      deltaY2 = 0.5 + Math.random() * (-0.5 - 0.5);
 
       // adding random value and rounding it to two digits.
       yValue1 = Math.round((yValue1 + deltaY1) * 100) / 100;
-      yValue2 = Math.round((yValue2 + deltaY2) * 100) / 100;
+      // console.log(coins[0]);
+      // yValue2 = Math.round((yValue2 + deltaY2) * 100) / 100;
 
       // pushing the new values
+      console.log("coins_0", chart.options.data);
+      console.log("coins", coins);
       dataPoints1.push({
         x: time.getTime(),
-        y: yValue1,
-      });
-      dataPoints2.push({
-        x: time.getTime(),
-        y: yValue2,
+        y: +coins[0].cValue,
       });
     }
 
     // updating legend text with  updated with y Value
-    // chart.options.data[0].legendText = cName + "  $" + yValue1;
+    // chart.options.data[0].legendText = "BTC" + "  $" + yValue1;
     // chart.options.data[1].legendText = " Company B  $" + yValue2;
     // --------------------------------------------
     // var length = chart.options.data[0].dataPoints.length;
@@ -158,8 +163,8 @@ function Reports(SelectedCoinsArr) {
   setInterval(function () {
     updateChart();
   }, updateInterval);
-  chart.options.data.push(x);
-  // console.log(chart.data);
+  console.log(chart.options.data);
+  console.log(chart.options.data[1]);
 }
 
 export default Reports;
