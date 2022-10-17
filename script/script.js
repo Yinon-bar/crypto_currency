@@ -113,13 +113,42 @@ $(document).ready(function getAllApi() {
           let cardId = this.dataset.objid;
           // console.log(cardId);
 
+          function coinDisc(data, cardId) {
+            // console.log(cardId);
+            // console.log(data);
+            console.log(flag);
+            coinInfo.push(data);
+            localStorage.setItem(`${cardId}`, JSON.stringify(data));
+            if (flag == 1) {
+              $(`#${cardId} .prog`)
+                .html(
+                  `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
+                <div class="col"><img width="100%" src="${data.image.small}"></div>` +
+                    `<div class="col-8"><h5>Currency Values</h5>
+                USD: ${data.market_data.current_price.usd} $<br>` +
+                    `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
+                    `ILS: &#x20AA; ${data.market_data.current_price.ils} 
+                </div>
+                `
+                )
+                .slideDown();
+
+              // .addClass("coin-desc");
+              // console.log($(btn).parent().prev().children());
+              $(btn).text("Read Less");
+              flag = 2;
+            } else {
+              $(btn).parent().prev().children().slideUp();
+              $(btn).parent().prev().children("prog").slideUp();
+              flag = 1;
+            }
+          }
           // יש לבצע בדיקה האם המטבע קיים כבר אצלינו
-          // console.log(cardId);
-          // const check = localStorage.getItem("01coin");
-          // console.log("check:", check);
           if (localStorage[`${cardId}`]) {
-            // coinInfo = JSON.parse(localStorage.getItem("coins"));
-            console.log("inon");
+            let getCoin = localStorage.getItem(`${cardId}`);
+            let coinObj = JSON.parse(getCoin);
+            console.log(coinObj);
+            coinDisc(coinObj, cardId);
           } else {
             $(`#${cardId} .prog`).slideDown(200);
             $.ajax({
@@ -133,36 +162,6 @@ $(document).ready(function getAllApi() {
               },
             });
             // תוספת פרטים נפתחת
-            function coinDisc(data, cardId) {
-              // console.log(cardId);
-              // console.log(data);
-              console.log(flag);
-              coinInfo.push(data);
-              localStorage.setItem(`${cardId}`, JSON.stringify(data));
-              if (flag == 1) {
-                $(`#${cardId} .prog`)
-                  .html(
-                    `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
-                  <div class="col"><img width="100%" src="${data.image.small}"></div>` +
-                      `<div class="col-8"><h5>Currency Values</h5>
-                  USD: ${data.market_data.current_price.usd} $<br>` +
-                      `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
-                      `ILS: &#x20AA; ${data.market_data.current_price.ils} 
-                  </div>
-                  `
-                  )
-                  .slideDown();
-
-                // .addClass("coin-desc");
-                // console.log($(btn).parent().prev().children());
-                $(btn).text("Read Less");
-                flag = 2;
-              } else {
-                $(btn).parent().prev().children().slideUp();
-                $(btn).parent().prev().children("prog").slideUp();
-                flag = 1;
-              }
-            }
           }
         });
       });
@@ -182,10 +181,10 @@ $(document).ready(function getAllApi() {
             $("#coinSec").html(getAllApi());
             break;
           case "reports":
-            if ((SelectedCoinsArr = [])) {
-              // location.reload();
-
-              return alert("You have to choose 1 - 5 coins");
+            if (SelectedCoinsArr.length == 0) {
+              console.log("inon");
+              location.reload();
+              return alert("You have to select 1 - 5 coins");
             }
             $("#coinSec").html(Reports(SelectedCoinsArr));
             break;

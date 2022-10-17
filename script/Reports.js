@@ -56,7 +56,7 @@ function Reports(SelectedCoinsArr) {
   }
 
   // קריאה לפונקציית API
-  const fetchInterval = 3000;
+  const fetchInterval = 2000;
 
   fetchData(SelectedCoinsArr);
   setInterval(function () {
