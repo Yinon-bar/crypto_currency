@@ -20,7 +20,7 @@ function Nav() {
       class="btn-check"
       name="btnradio"
       id="reports"
-      
+      disabled=""
       autocomplete="off"
     />
     <label class="btn btn-outline-primary" for="reports"

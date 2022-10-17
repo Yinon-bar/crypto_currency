@@ -80,6 +80,7 @@ $(document).ready(function getAllApi() {
       $("#coinSec input[type=checkbox]").each(function () {
         $(this).on("change", function () {
           let cardId = this.dataset.objid;
+          $("#reports").removeAttr("disabled");
           // ולידציה להוספת מטבעות
           if (this.checked) {
             if (SelectedCoinsArr.length < 5) {
@@ -108,14 +109,9 @@ $(document).ready(function getAllApi() {
       $("button").each(function (index) {
         let flag = 1;
         $(this).on("click", function () {
-          // console.log(this.dataset.objid);
           let btn = this;
           let cardId = this.dataset.objid;
-          // console.log(cardId);
-
           function coinDisc(data, cardId) {
-            // console.log(cardId);
-            // console.log(data);
             console.log(flag);
             coinInfo.push(data);
             localStorage.setItem(`${cardId}`, JSON.stringify(data));
@@ -172,20 +168,16 @@ $(document).ready(function getAllApi() {
 
   function changeToReports() {
     $(".btn-check").each(function (index) {
-      // console.log(index);
-      // console.log(this);
       $(this).on("change", function () {
         // console.log(this.id);
         switch (this.id) {
           case "home":
+            let rep = $("#reports");
+            console.log(rep);
+            rep.attr("disabled", "");
             $("#coinSec").html(getAllApi());
             break;
           case "reports":
-            if (SelectedCoinsArr.length == 0) {
-              console.log("inon");
-              location.reload();
-              return alert("You have to select 1 - 5 coins");
-            }
             $("#coinSec").html(Reports(SelectedCoinsArr));
             break;
           case "about":
