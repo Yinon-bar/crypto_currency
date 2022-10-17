@@ -12,7 +12,7 @@ function Nav() {
       name="btnradio"
       id="home"
       autocomplete="off"
-      checked=""
+      checked="checked"
     />
     <label class="btn btn-outline-primary" for="home">Home</label>
     <input
@@ -20,6 +20,7 @@ function Nav() {
       class="btn-check"
       name="btnradio"
       id="reports"
+      
       autocomplete="off"
     />
     <label class="btn btn-outline-primary" for="reports"

@@ -99,6 +99,10 @@ $(document).ready(function getAllApi() {
       });
     }
     getInfo(kryptoArr);
+
+    // הגדרת המערך שאליו ייכנסו האובייקטים של המידע הנוסף
+    let coinInfo = [];
+    // פונקצייה להבאת נתונים נוספים עבור מטבע נוכחי
     function getInfo(arr) {
       // console.log(arr);
       $("button").each(function (index) {
@@ -108,43 +112,56 @@ $(document).ready(function getAllApi() {
           let btn = this;
           let cardId = this.dataset.objid;
           // console.log(cardId);
-          $(`#${cardId} .prog`).slideDown(200);
-          $.ajax({
-            url: "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
-            success: function (data) {
-              coinDisc(data, cardId);
-            },
-            error: function (err) {
-              console.log(err);
-            },
-          });
-          // תוספת פרטים נפתחת
-          function coinDisc(data, cardId) {
-            console.log(cardId);
-            // console.log(data);
-            console.log(flag);
-            if (flag == 1) {
-              $(`#${cardId} .prog`)
-                .html(
-                  `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
+
+          // יש לבצע בדיקה האם המטבע קיים כבר אצלינו
+          // console.log(cardId);
+          // const check = localStorage.getItem("01coin");
+          // console.log("check:", check);
+          if (localStorage[`${cardId}`]) {
+            // coinInfo = JSON.parse(localStorage.getItem("coins"));
+            console.log("inon");
+          } else {
+            $(`#${cardId} .prog`).slideDown(200);
+            $.ajax({
+              url:
+                "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
+              success: function (data) {
+                coinDisc(data, cardId);
+              },
+              error: function (err) {
+                console.log(err);
+              },
+            });
+            // תוספת פרטים נפתחת
+            function coinDisc(data, cardId) {
+              // console.log(cardId);
+              // console.log(data);
+              console.log(flag);
+              coinInfo.push(data);
+              localStorage.setItem(`${cardId}`, JSON.stringify(data));
+              if (flag == 1) {
+                $(`#${cardId} .prog`)
+                  .html(
+                    `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
                   <div class="col"><img width="100%" src="${data.image.small}"></div>` +
-                    `<div class="col-8"><h5>Currency Values</h5>
+                      `<div class="col-8"><h5>Currency Values</h5>
                   USD: ${data.market_data.current_price.usd} $<br>` +
-                    `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
-                    `ILS: &#x20AA; ${data.market_data.current_price.ils} 
+                      `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
+                      `ILS: &#x20AA; ${data.market_data.current_price.ils} 
                   </div>
                   `
-                )
-                .slideDown();
+                  )
+                  .slideDown();
 
-              // .addClass("coin-desc");
-              // console.log($(btn).parent().prev().children());
-              $(btn).text("Read Less");
-              flag = 2;
-            } else {
-              $(btn).parent().prev().children().slideUp();
-              $(btn).parent().prev().children("prog").slideUp();
-              flag = 1;
+                // .addClass("coin-desc");
+                // console.log($(btn).parent().prev().children());
+                $(btn).text("Read Less");
+                flag = 2;
+              } else {
+                $(btn).parent().prev().children().slideUp();
+                $(btn).parent().prev().children("prog").slideUp();
+                flag = 1;
+              }
             }
           }
         });
@@ -165,6 +182,11 @@ $(document).ready(function getAllApi() {
             $("#coinSec").html(getAllApi());
             break;
           case "reports":
+            if ((SelectedCoinsArr = [])) {
+              // location.reload();
+
+              return alert("You have to choose 1 - 5 coins");
+            }
             $("#coinSec").html(Reports(SelectedCoinsArr));
             break;
           case "about":
