@@ -164,6 +164,8 @@ $(document).ready(function getAllApi() {
     }
   }
 
+  let inon = 0;
+
   changeToReports();
 
   function changeToReports() {
