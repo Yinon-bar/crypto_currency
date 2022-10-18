@@ -36,3 +36,124 @@ canvas {
   width: 100%;
   position: relative;
 }
+
+/* Abaut Section */
+.about {
+  font-family: "Inter", sans-serif;
+  width: 400px;
+  /* margin-top: 2rem; */
+  background-color: #1a1b21;
+  border-radius: 1rem 1rem 0rem 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.about h1 {
+  font-weight: 600;
+  margin-top: 1rem;
+  color: #ffffff;
+}
+
+.about h4 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #f3bf99;
+}
+
+.about > img {
+  width: 100%;
+  border-radius: 1rem 1rem 0rem 0rem;
+}
+
+.about .buttons {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.about .btn {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: 115px;
+  height: 40px;
+  border: none;
+  border-radius: 0.6rem;
+}
+
+.about #email {
+  background-color: #ffff;
+  color: #374151;
+}
+
+.about #linkedin {
+  background-color: #5093e2;
+  color: #fff;
+}
+
+/* Details----------------------------------- */
+
+.details {
+  direction: ltr;
+  padding: 1rem 1.7rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1b21;
+}
+
+.details h2 {
+  font-weight: 600;
+  color: #f3bf99;
+  margin-bottom: 0.5rem;
+}
+
+.details p {
+  font-size: 1rem;
+  line-height: 1.3rem;
+  font-weight: 600;
+}
+
+/* Intrests----------------------------------- */
+
+.interests {
+  direction: ltr;
+  padding: 0.5rem 1.7rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1b21;
+}
+
+.interests h2 {
+  font-weight: 600;
+  color: #f3bf99;
+  margin-bottom: 0.5rem;
+}
+
+.interests p {
+  font-size: 1rem;
+  line-height: 1.3rem;
+  font-weight: 600;
+}
+
+/* Footer--------------------------- */
+
+.footer {
+  width: 100%;
+  padding: 1rem 1.7rem;
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  justify-content: space-around;
+  /* flex-direction: column; */
+  background-color: #1a1b21;
+  border-radius: 0rem 0rem 1rem 1rem;
+}
+
+.footer img {
+  width: 30px;
+  cursor: pointer;
+}
