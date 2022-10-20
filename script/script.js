@@ -67,8 +67,6 @@ $(document).ready(function () {
     });
   }
 
-  let i = 5;
-
   function display(arr) {
     console.log(arr);
     arr.forEach((obj) => {
