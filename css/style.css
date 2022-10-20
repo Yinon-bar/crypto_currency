@@ -157,3 +157,20 @@ canvas {
   width: 30px;
   cursor: pointer;
 }
+
+/* Coin Table */
+
+.coinTable {
+  display: none;
+  width: 500px;
+  height: 500px;
+  /* z-index: 3; */
+  background-color: #1a1b21;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.coinTable > table {
+  max-width: 350px;
+  margin-top: 2.6rem;
+}

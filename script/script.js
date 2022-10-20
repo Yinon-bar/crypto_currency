@@ -2,6 +2,43 @@ import Header from "./Header.js";
 import Nav from "./Nav.js";
 import About from "./About.js";
 import Reports from "./Reports.js";
+import CoinTable from "./CoinTable.js";
+
+export function addToArrReports(SelectedCoinsArr, final = "") {
+  // console.log(cardId);
+  $("#coinSec input[type=checkbox]").each(function () {
+    $(this).on("change", function () {
+      let cardId = this.dataset.objid;
+      $("#reports").removeAttr("disabled");
+      // ולידציה להוספת מטבעות
+      if (this.checked) {
+        if (SelectedCoinsArr.length < 5 || SelectedCoinsArr.length > 5) {
+          if (final == 1) {
+            $("#coinSec").html(Reports(SelectedCoinsArr));
+          }
+          SelectedCoinsArr.push(cardId);
+        } else {
+          SelectedCoinsArr.push(cardId);
+          console.log(SelectedCoinsArr);
+          CoinsLimit(SelectedCoinsArr);
+          // alert("The maximum coins to compare is 5");
+          this.checked = false;
+        }
+      } else {
+        // let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
+        // console.log(delItem);
+        // SelectedCoinsArr.splice(delItem, 1);
+        // console.log(SelectedCoinsArr);
+      }
+      console.log(SelectedCoinsArr);
+    });
+  });
+}
+
+function CoinsLimit(coinsArray) {
+  $("#coinSec").html(CoinTable(coinsArray));
+  $(".coinTable").slideDown(200);
+}
 
 // רנדור "קומפוננטות" ההדר והנאב בר
 function renderToHtml() {
@@ -72,33 +109,9 @@ $(document).ready(function getAllApi() {
       `);
     });
 
-    addToArrRepoerts();
+    addToArrReports(SelectedCoinsArr);
     // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
 
-    function addToArrRepoerts() {
-      // console.log(cardId);
-      $("#coinSec input[type=checkbox]").each(function () {
-        $(this).on("change", function () {
-          let cardId = this.dataset.objid;
-          $("#reports").removeAttr("disabled");
-          // ולידציה להוספת מטבעות
-          if (this.checked) {
-            if (SelectedCoinsArr.length < 5) {
-              SelectedCoinsArr.push(cardId);
-            } else {
-              alert("The maximum coins to compare is 5");
-              this.checked = false;
-            }
-          } else {
-            let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
-            console.log(delItem);
-            SelectedCoinsArr.splice(delItem, 1);
-            console.log(SelectedCoinsArr);
-          }
-          console.log(SelectedCoinsArr);
-        });
-      });
-    }
     getInfo(kryptoArr);
 
     // הגדרת המערך שאליו ייכנסו האובייקטים של המידע הנוסף

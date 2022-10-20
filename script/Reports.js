@@ -1,4 +1,5 @@
 function Reports(SelectedCoinsArr) {
+  console.log(SelectedCoinsArr);
   // שלב 1 - יצירת הטבלה
   $("#coinSec").html(
     `<div id=chartContainer style="height: 450px; width: 100%" ></div>`
