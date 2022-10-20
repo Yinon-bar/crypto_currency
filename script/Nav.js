@@ -37,11 +37,12 @@ function Nav() {
   </div>
   <form class="d-flex">
     <input
+      id="searchTxt"
       class="me-sm-2 form-control bg-dark text-light"
       type="text"
       placeholder="Search"
     />
-    <button class="btn btn-secondary w-50" type="submit">
+    <button id="find" class="btn btn-secondary w-50" >
       Find Coin
     </button>
   </form>

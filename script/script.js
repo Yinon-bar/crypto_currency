@@ -10,24 +10,81 @@ function renderToHtml() {
 }
 
 renderToHtml();
-
 // ביצוע קריאת API לכל המטבעות
-$(document).ready(function getAllApi() {
-  $.ajax({
-    url: "https://api.coingecko.com/api/v3/coins/list",
-    success: function (data) {
-      display(data);
-    },
-    error: function (err) {
-      console.log(err);
-    },
-  });
+$(document).ready(function () {
+  let kryptoArr = [];
+  search();
+  getAllApi();
+  // פונקצייה לחיפוס מטבעות
+  function search() {
+    $("#find").on("click", function (e) {
+      e.preventDefault();
+      let txt = $("#searchTxt").val();
+      if (txt == "") {
+        getAllApi();
+      } else {
+        let searchValue = kryptoArr.filter((coin) => coin.name.includes(txt));
+        console.log(searchValue);
+        $("#coinSec").html(render(searchValue));
+      }
+    });
+  }
+  function getAllApi() {
+    $.ajax({
+      url: "https://api.coingecko.com/api/v3/coins/list",
+      success: function (data) {
+        display(data);
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  }
+
+  function render(kryptoArr) {
+    $("#coinSec").html("");
+    kryptoArr.forEach((obj) => {
+      // console.log(obj);
+      $("#coinSec").append(`
+    <div
+          class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
+          style="max-width: 20rem; min-height: 20rem;" >
+          <div class="card-header">${obj.symbol}</div>
+          <div class="card-body row d-flex align-items-space-between">
+            <div class="sec col-9">
+              <h4 class="card-title">${obj.name}</h4>
+              <h6 class="text-secondary card-title">ID: ${obj.id}</h6>
+            </div>
+            <div
+              class="form-check d-flex justify-content-end col-3 form-switch"
+            >
+              <input
+                data-objid='${obj.symbol}'
+                class="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheckDefault"
+                style="font-size: 1.5rem;"
+              />
+            </div>
+            <div id="para">
+              <div class="coin-desc prog">
+                <img width="100%" src="./img/Loading_icon.gif">
+              </div>
+            </div>
+            <div class="moreBtn row-2 p-0 d-flex align-items-end">
+              <button type="button" data-objid='${obj.id}' class="btn btn-success mx-auto mb-0">Read More</button>
+            </div>
+          </div>
+        </div>
+    `);
+    });
+  }
 
   let SelectedCoinsArr = [];
 
   // במידה והכל תקין הפעלת פונקציית דיספליי
   function display(arr) {
-    let kryptoArr = [];
+    console.log("inon");
     arr.forEach((obj) => {
       kryptoArr.push(obj);
     });
@@ -35,42 +92,7 @@ $(document).ready(function getAllApi() {
     kryptoArr.splice(200);
     console.log(kryptoArr);
     // עבור כל מטבע שחזר במערך יש לרנדר לדיו המתאים
-    $("#coinSec").html("");
-    kryptoArr.forEach((obj) => {
-      // console.log(obj);
-      $("#coinSec").append(`
-      <div
-            class="card text-white bg-dark mb-3 p-0" id="${obj.id}"
-            style="max-width: 20rem; min-height: 20rem;" >
-            <div class="card-header">${obj.symbol}</div>
-            <div class="card-body row d-flex align-items-space-between">
-              <div class="sec col-9">
-                <h4 class="card-title">${obj.name}</h4>
-                <h6 class="text-secondary card-title">ID: ${obj.id}</h6>
-              </div>
-              <div
-                class="form-check d-flex justify-content-end col-3 form-switch"
-              >
-                <input
-                  data-objid='${obj.symbol}'
-                  class="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  style="font-size: 1.5rem;"
-                />
-              </div>
-              <div id="para">
-                <div class="coin-desc prog">
-                  <img width="100%" src="./img/Loading_icon.gif">
-                </div>
-              </div>
-              <div class="moreBtn row-2 p-0 d-flex align-items-end">
-                <button type="button" data-objid='${obj.id}' class="btn btn-success mx-auto mb-0">Read More</button>
-              </div>
-            </div>
-          </div>
-      `);
-    });
+    render(kryptoArr);
 
     addToArrRepoerts();
     // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
