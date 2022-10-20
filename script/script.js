@@ -25,7 +25,7 @@ $(document).ready(function () {
       } else {
         let searchValue = kryptoArr.filter((coin) => coin.name.includes(txt));
         console.log(searchValue);
-        $("#coinSec").html(render(searchValue));
+        render(searchValue);
       }
     });
   }
@@ -41,8 +41,113 @@ $(document).ready(function () {
     });
   }
 
+  function addToArrRepoerts() {
+    // console.log(cardId);
+    $("#coinSec input[type=checkbox]").each(function () {
+      $(this).on("change", function () {
+        let cardId = this.dataset.objid;
+        $("#reports").removeAttr("disabled");
+        // ולידציה להוספת מטבעות
+        if (this.checked) {
+          if (SelectedCoinsArr.length < 5) {
+            SelectedCoinsArr.push(cardId);
+          } else {
+            alert("The maximum coins to compare is 5");
+            this.checked = false;
+          }
+        } else {
+          let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
+          console.log(delItem);
+          SelectedCoinsArr.splice(delItem, 1);
+          console.log(SelectedCoinsArr);
+        }
+        console.log(SelectedCoinsArr);
+      });
+    });
+  }
+
+  function display(arr) {
+    console.log(arr);
+    arr.forEach((obj) => {
+      kryptoArr.push(obj);
+    });
+    // יש לחתוך את המערך ל200 מטבעות בלבד
+    kryptoArr.splice(200);
+    console.log(kryptoArr);
+    // עבור כל מטבע שחזר במערך יש לרנדר לדיו המתאים
+    render(kryptoArr);
+
+    addToArrRepoerts();
+    // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
+
+    getInfo(kryptoArr);
+    // פונקצייה להבאת נתונים נוספים עבור מטבע נוכחי
+  }
+
+  // הגדרת המערך שאליו ייכנסו האובייקטים של המידע הנוסף
+  let coinInfo = [];
+
+  function getInfo(arr) {
+    // console.log(arr);
+    $("button").each(function (index) {
+      let flag = 1;
+      $(this).on("click", function () {
+        let btn = this;
+        let cardId = this.dataset.objid;
+        function coinDisc(data, cardId) {
+          console.log(flag);
+          coinInfo.push(data);
+          localStorage.setItem(`${cardId}`, JSON.stringify(data));
+          if (flag == 1) {
+            $(`#${cardId} .prog`)
+              .html(
+                `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
+              <div class="col"><img width="100%" src="${data.image.small}"></div>` +
+                  `<div class="col-8"><h5>Currency Values</h5>
+              USD: ${data.market_data.current_price.usd} $<br>` +
+                  `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
+                  `ILS: &#x20AA; ${data.market_data.current_price.ils} 
+              </div>
+              `
+              )
+              .slideDown();
+
+            // .addClass("coin-desc");
+            // console.log($(btn).parent().prev().children());
+            $(btn).text("Read Less");
+            flag = 2;
+          } else {
+            $(btn).parent().prev().children().slideUp();
+            $(btn).parent().prev().children("prog").slideUp();
+            flag = 1;
+          }
+        }
+        // יש לבצע בדיקה האם המטבע קיים כבר אצלינו
+        if (localStorage[`${cardId}`]) {
+          let getCoin = localStorage.getItem(`${cardId}`);
+          let coinObj = JSON.parse(getCoin);
+          console.log(coinObj);
+          coinDisc(coinObj, cardId);
+        } else {
+          $(`#${cardId} .prog`).slideDown(200);
+          $.ajax({
+            url: "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
+            success: function (data) {
+              coinDisc(data, cardId);
+            },
+            error: function (err) {
+              console.log(err);
+            },
+          });
+          // תוספת פרטים נפתחת
+        }
+      });
+    });
+  }
+
   function render(kryptoArr) {
     $("#coinSec").html("");
+    console.log(kryptoArr);
     kryptoArr.forEach((obj) => {
       // console.log(obj);
       $("#coinSec").append(`
@@ -78,113 +183,14 @@ $(document).ready(function () {
         </div>
     `);
     });
+    getInfo(kryptoArr);
+    addToArrRepoerts(kryptoArr);
   }
+  // console.log(kryptoArr);
 
   let SelectedCoinsArr = [];
 
   // במידה והכל תקין הפעלת פונקציית דיספליי
-  function display(arr) {
-    console.log("inon");
-    arr.forEach((obj) => {
-      kryptoArr.push(obj);
-    });
-    // יש לחתוך את המערך ל200 מטבעות בלבד
-    kryptoArr.splice(200);
-    console.log(kryptoArr);
-    // עבור כל מטבע שחזר במערך יש לרנדר לדיו המתאים
-    render(kryptoArr);
-
-    addToArrRepoerts();
-    // הכנסת המטבעות למערך בלחיצה על טוגל באטטן
-
-    function addToArrRepoerts() {
-      // console.log(cardId);
-      $("#coinSec input[type=checkbox]").each(function () {
-        $(this).on("change", function () {
-          let cardId = this.dataset.objid;
-          $("#reports").removeAttr("disabled");
-          // ולידציה להוספת מטבעות
-          if (this.checked) {
-            if (SelectedCoinsArr.length < 5) {
-              SelectedCoinsArr.push(cardId);
-            } else {
-              alert("The maximum coins to compare is 5");
-              this.checked = false;
-            }
-          } else {
-            let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
-            console.log(delItem);
-            SelectedCoinsArr.splice(delItem, 1);
-            console.log(SelectedCoinsArr);
-          }
-          console.log(SelectedCoinsArr);
-        });
-      });
-    }
-    getInfo(kryptoArr);
-
-    // הגדרת המערך שאליו ייכנסו האובייקטים של המידע הנוסף
-    let coinInfo = [];
-    // פונקצייה להבאת נתונים נוספים עבור מטבע נוכחי
-    function getInfo(arr) {
-      // console.log(arr);
-      $("button").each(function (index) {
-        let flag = 1;
-        $(this).on("click", function () {
-          let btn = this;
-          let cardId = this.dataset.objid;
-          function coinDisc(data, cardId) {
-            console.log(flag);
-            coinInfo.push(data);
-            localStorage.setItem(`${cardId}`, JSON.stringify(data));
-            if (flag == 1) {
-              $(`#${cardId} .prog`)
-                .html(
-                  `<div class="row mt-4 mb-5 d-flex justify-content-center align-items-between">
-                <div class="col"><img width="100%" src="${data.image.small}"></div>` +
-                    `<div class="col-8"><h5>Currency Values</h5>
-                USD: ${data.market_data.current_price.usd} $<br>` +
-                    `EUR: ${data.market_data.current_price.eur} &euro;<br>` +
-                    `ILS: &#x20AA; ${data.market_data.current_price.ils} 
-                </div>
-                `
-                )
-                .slideDown();
-
-              // .addClass("coin-desc");
-              // console.log($(btn).parent().prev().children());
-              $(btn).text("Read Less");
-              flag = 2;
-            } else {
-              $(btn).parent().prev().children().slideUp();
-              $(btn).parent().prev().children("prog").slideUp();
-              flag = 1;
-            }
-          }
-          // יש לבצע בדיקה האם המטבע קיים כבר אצלינו
-          if (localStorage[`${cardId}`]) {
-            let getCoin = localStorage.getItem(`${cardId}`);
-            let coinObj = JSON.parse(getCoin);
-            console.log(coinObj);
-            coinDisc(coinObj, cardId);
-          } else {
-            $(`#${cardId} .prog`).slideDown(200);
-            $.ajax({
-              url:
-                "https://api.coingecko.com/api/v3/coins/" + this.dataset.objid,
-              success: function (data) {
-                coinDisc(data, cardId);
-              },
-              error: function (err) {
-                console.log(err);
-              },
-            });
-            // תוספת פרטים נפתחת
-          }
-        });
-      });
-    }
-  }
 
   changeToReports();
 
