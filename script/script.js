@@ -50,6 +50,7 @@ $(document).ready(function () {
         // ולידציה להוספת מטבעות
         if (this.checked) {
           if (SelectedCoinsArr.length < 5) {
+            console.log(SelectedCoinsArr);
             SelectedCoinsArr.push(cardId);
           } else {
             alert("The maximum coins to compare is 5");
@@ -57,7 +58,7 @@ $(document).ready(function () {
           }
         } else {
           let delItem = SelectedCoinsArr.indexOf(this.dataset.objid);
-          console.log(delItem);
+          // console.log(delItem);
           SelectedCoinsArr.splice(delItem, 1);
           console.log(SelectedCoinsArr);
         }
@@ -184,7 +185,7 @@ $(document).ready(function () {
     `);
     });
     getInfo(kryptoArr);
-    addToArrRepoerts(kryptoArr);
+    // addToArrRepoerts(kryptoArr);
   }
   // console.log(kryptoArr);
 
